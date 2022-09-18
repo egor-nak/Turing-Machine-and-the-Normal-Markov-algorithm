@@ -9,12 +9,12 @@ a b c - алфавит
 3: (, R,) (,R,) (,R,) (b, , !)
 4: (, R,) (,R,) (,R,) (c, , !)
 
- Ясейка таблице задаётся в скобках по формату "(знак, передвиженеи, состояние)", обзательно между параметрами должны быть запятые и каждая ячейка должна быть заключена в скобки
- Если ячейка записана как "()", то это означает, что в эту ячейку невозможно попасть
+ Ячейка таблице задаётся в скобках по формату "(знак, передвиженеи, состояние)", обязательно между параметрами должны быть запятые и каждая ячейка должна быть заключена в скобки
+ Если ячейка записана, как "()", то это означает, что в эту ячейку невозможно попасть
 
  На месте занка может быть:
  - Любой char
- - Пустота или пробелы, это будет считаться как команда оставить пржний знак
+ - Пустота или пробелы, это будет считаться, как команда оставить прежний знак
  - # - что означает лямбду
 
 На месте передвижения может быть:
@@ -24,10 +24,10 @@ a b c - алфавит
 
  На месте состояния может быть:
  - Любое число
- - Пустота или пробелы - это будет осзначать, остаться в том же состоянии
+ - Пустота или пробелы - это будет означать, остаться в том же состоянии
  - ! - это означает завершить программу
 
- После того, как вы заполнили txt файл с программой, вы можете вводить хводные данные через консоль, просто запустив программу.
+ После того, как вы заполнили txt файл с программой, вы можете вводить входные данные через консоль, просто запустив программу.
  Сначала вы вводите строку, которую вы хотите обработать, а потом mode {1, 2}. Если mode == 1, то выводится только финальное состояние ленты,
  а еси mode == 2, то выводится состояние ленты после каждого шага.
 
@@ -68,6 +68,9 @@ vector<string> splitter(string s, set<char> divisor, bool flag_reg = false) { //
 		if (divisor.find(s[i]) == divisor.end()) {
 			tmp_ans += s[i];
 		} else {
+			if (s[i] == '(' && s[i + 1] == ')' && tmp_ans == "") {
+				ans.push_back("");
+			}
 			if (tmp_ans == "" && !flag_reg) {
 				continue;
 			}
@@ -118,6 +121,10 @@ void get_data_of_emulator(vector<char> &alphabet, vector<vector<cell>> &table, s
 	vector<cell> tmp_row;
 	table.push_back(tmp_row);
 
+	cell fake_cell;
+	fake_cell.sign = '1';
+	fake_cell.staus = -100;
+	fake_cell.movement = -100;
 	for (int row = 1; row <= q_count; ++row) {
 		string s;
 		getline(myfile, s);
@@ -129,6 +136,10 @@ void get_data_of_emulator(vector<char> &alphabet, vector<vector<cell>> &table, s
 
 		vector<cell> new_row;
 		for (int i = 0; i < split_to_cells.size(); ++i) {
+			if (split_to_cells[i] == "") {
+				new_row.push_back(fake_cell);
+				continue;
+			}
 			if (split_to_cells[i][split_to_cells[i].size() - 1] == ':') { // это случай обработки номера состояния
 				continue;
 			}
@@ -218,7 +229,7 @@ int main() {
 	vector<char> alphabet;
 	vector<vector<cell>> table;
 	vector<char> tape(MAX_LENGHT, '#');
-	string path_to_turing_input = "Yours path";
+	string path_to_turing_input = "/Users/egor.nak/CLionProjects/Olymp_prog/Turing/test.txt";
 
 	get_data_of_emulator(alphabet, table, path_to_turing_input);
 
@@ -236,6 +247,8 @@ int main() {
 	ll cariage = MAX_LENGHT / 2;
 
 	put_input_to_the_tape(s, cariage, tape);
+
+//	print_table(table);
 
 	start_turing_machine(table, alphabet, tape, mode, cariage);
 
