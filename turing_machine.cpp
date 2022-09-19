@@ -229,7 +229,7 @@ int main() {
 	vector<char> alphabet;
 	vector<vector<cell>> table;
 	vector<char> tape(MAX_LENGHT, '#');
-	string path_to_turing_input = "/Users/egor.nak/CLionProjects/Olymp_prog/Turing/test.txt";
+	string path_to_turing_input = "path to file with settings";
 
 	get_data_of_emulator(alphabet, table, path_to_turing_input);
 
